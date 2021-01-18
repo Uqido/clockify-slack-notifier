@@ -24,7 +24,7 @@ app.post("/clockify/projects/new", (req, res) => {
     res.status(200).end()
 
     axios
-      .post(process.env.SLACK_HOOK, { text: `👋 Hey! A new project has been created with name *${name}* for client *${clientName}*!` })
+      .post(process.env.SLACK_HOOK, { text: `:clap: A new project has been created with name *${name}* for client *${clientName}*!` })
       .then((_res) => {
         console.log('Message sent to Slack webhook!')
         // console.log(res)
