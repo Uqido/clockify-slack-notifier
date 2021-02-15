@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 const express = require('express')
 require('dotenv').config()
 
-if (!process.env.CLOCKIFY_SIGING_SECRET) {
+if (!process.env.CLOCKIFY_PROJECT_CREATED_SECRET && !process.env.CLOCKIFY_CLIENT_CREATED_SECRET) {
   throw new Error("Error! You must specify ️CLOCKIFY_SIGING_SECRET")
 }
 
