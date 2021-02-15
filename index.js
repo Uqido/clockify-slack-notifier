@@ -17,7 +17,7 @@ app.use(bodyParser.json())
 
 app.post("/clockify/projects/new", (req, res) => {
   const clockifySignature = req.header('clockify-signature')
-  if (clockifySignature === process.env.CLOCKIFY_SIGING_SECRET) {
+  if (clockifySignature === process.env.CLOCKIFY_PROJECT_CREATED_SECRET) {
     console.log('New project from Clockify!')
     console.log(req.body)
     const { name, clientName } = req.body
@@ -41,7 +41,7 @@ app.post("/clockify/projects/new", (req, res) => {
 
 app.post("/clockify/clients/new", (req, res) => {
   const clockifySignature = req.header('clockify-signature')
-  if (clockifySignature === process.env.CLOCKIFY_SIGING_SECRET) {
+  if (clockifySignature === process.env.CLOCKIFY_CLIENT_CREATED_SECRET) {
     console.log('New client from Clockify!')
     console.log(req.body)
     const { name } = req.body
