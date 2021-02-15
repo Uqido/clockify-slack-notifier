@@ -47,16 +47,16 @@ app.post("/clockify/clients/new", (req, res) => {
     const { name } = req.body
     res.status(200).end()
 
-    // axios
-    //   .post(process.env.SLACK_HOOK, { text: `:muscle: A new client has been created with name *${name}*!` })
-    //   .then((_res) => {
-    //     console.log('Message sent to Slack webhook!')
-    //     // console.log(res)
-    //   })
-    //   .catch((error) => {
-    //     console.log('Error sending message to Slack webhook!')
-    //     console.error(error)
-    //   })
+    axios
+      .post(process.env.SLACK_HOOK, { text: `:muscle: The new client *${name}* has been added to Clockify!` })
+      .then((_res) => {
+        console.log('Message sent to Slack webhook!')
+        // console.log(res)
+      })
+      .catch((error) => {
+        console.log('Error sending message to Slack webhook!')
+        console.error(error)
+      })
   } else {
     console.log('Unauthorized')
     res.status(401).json({message: 'Unauthorized'}).end()
