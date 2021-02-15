@@ -39,4 +39,28 @@ app.post("/clockify/projects/new", (req, res) => {
   }
 })
 
+app.post("/clockify/clients/new", (req, res) => {
+  const clockifySignature = req.header('clockify-signature')
+  if (clockifySignature === process.env.CLOCKIFY_SIGING_SECRET) {
+    console.log('New client from Clockify!')
+    console.log(req.body)
+    const { name } = req.body
+    res.status(200).end()
+
+    // axios
+    //   .post(process.env.SLACK_HOOK, { text: `:muscle: A new client has been created with name *${name}*!` })
+    //   .then((_res) => {
+    //     console.log('Message sent to Slack webhook!')
+    //     // console.log(res)
+    //   })
+    //   .catch((error) => {
+    //     console.log('Error sending message to Slack webhook!')
+    //     console.error(error)
+    //   })
+  } else {
+    console.log('Unauthorized')
+    res.status(401).json({message: 'Unauthorized'}).end()
+  }
+})
+
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`))
