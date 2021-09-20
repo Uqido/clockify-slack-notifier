@@ -15,7 +15,7 @@ const app = express()
 const PORT = 3000
 app.use(bodyParser.json())
 
-app.post("/clockify/projects/new", (req, res) => {
+app.post('clockify/projects/new', async (req, res) => {
   const clockifySignature = req.header('clockify-signature')
   if (clockifySignature === process.env.CLOCKIFY_PROJECT_CREATED_SECRET) {
     console.log('New project from Clockify!')
@@ -23,23 +23,14 @@ app.post("/clockify/projects/new", (req, res) => {
     const { name, clientName } = req.body
     res.status(200).end()
 
-    axios
-      .post(process.env.SLACK_HOOK, { text: `:clap: A new project has been created with name *${name}* for client *${clientName}*!` })
-      .then((_res) => {
-        console.log('Message sent to Slack webhook!')
-        // console.log(res)
-      })
-      .catch((error) => {
-        console.log('Error sending message to Slack webhook!')
-        console.error(error)
-      })
+    await sendMessageToSlackChannel(`:clap: A new project has been created with name *${name}* for client *${clientName}*!`)
   } else {
     console.log('Unauthorized')
     res.status(401).json({message: 'Unauthorized'}).end()
   }
 })
 
-app.post("/clockify/clients/new", (req, res) => {
+app.post('/clockify/clients/new', async (req, res) => {
   const clockifySignature = req.header('clockify-signature')
   if (clockifySignature === process.env.CLOCKIFY_CLIENT_CREATED_SECRET) {
     console.log('New client from Clockify!')
@@ -47,16 +38,7 @@ app.post("/clockify/clients/new", (req, res) => {
     const { name } = req.body
     res.status(200).end()
 
-    axios
-      .post(process.env.SLACK_HOOK, { text: `:muscle: The new client *${name}* has been added to Clockify!` })
-      .then((_res) => {
-        console.log('Message sent to Slack webhook!')
-        // console.log(res)
-      })
-      .catch((error) => {
-        console.log('Error sending message to Slack webhook!')
-        console.error(error)
-      })
+    await sendMessageToSlackChannel(`:muscle: The new client *${name}* has been added to Clockify!`);
   } else {
     console.log('Unauthorized')
     res.status(401).json({message: 'Unauthorized'}).end()
@@ -64,3 +46,13 @@ app.post("/clockify/clients/new", (req, res) => {
 })
 
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`))
+
+async function sendMessageToSlackChannel(text) {
+  try {
+    await axios.post(process.env.SLACK_HOOK, { text })
+    console.log('Message sent to Slack webhook!')
+  } catch (e) {
+    console.log('Error sending message to Slack webhook!')
+    console.error(e)
+  }
+}
